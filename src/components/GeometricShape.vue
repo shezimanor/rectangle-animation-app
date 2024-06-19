@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, toRefs, watch } from 'vue';
 
 // props
 const props = defineProps({
@@ -13,13 +13,16 @@ const props = defineProps({
   }
 });
 
+// 解構 props：可保持一致性
+const { chunk } = toRefs(props);
+
 const animateElement = ref(null);
 
 // 預設的 svg 的長寬
 const defaultSize = ref(360);
 
-// svg 的長寬
-const size = computed(() => (defaultSize.value / props.chunk) | 0);
+// svg 的長寬：交由 chunk 來決定
+const size = computed(() => (defaultSize.value / chunk.value) | 0);
 
 const viewBox = computed(() => `0 0 ${size.value + 4} ${size.value + 4}`);
 
@@ -43,6 +46,17 @@ const strokeDasharray = computed(() => {
   const mainDashLength = Math.floor(shapeHalfPerimeter / 3);
   return `${mainDashLength} ${shapeHalfPerimeter - mainDashLength}`;
 });
+
+// 監控 chunk 來控制動畫重啟：因為剛好 chunk 的變化是動畫需要重啟的主要原因
+watch(chunk, () => {
+  beginAnmation();
+});
+
+// methods
+function beginAnmation() {
+  // beginElement 會立即重新啟動動畫
+  animateElement.value.beginElement();
+}
 </script>
 
 <template>
