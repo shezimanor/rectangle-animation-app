@@ -15,7 +15,12 @@ function changeElementCount(count) {
 <template>
   <div class="main-wrapper">
     <div :class="['grid-container', elementLayoutClass]">
-      <GeometricShape v-for="n in elementCount" :active="true" />
+      <GeometricShape
+        v-for="n in elementCount"
+        :key="`shape_${n}`"
+        :active="true"
+        :chunk="elementCountSqrt"
+      />
     </div>
     <div class="flex-container">
       <div class="flex-item">

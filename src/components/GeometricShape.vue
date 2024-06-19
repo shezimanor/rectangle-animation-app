@@ -1,38 +1,85 @@
 <script setup>
-defineProps({
-  active: Boolean
+import { computed, ref } from 'vue';
+
+// props
+const props = defineProps({
+  active: {
+    type: Boolean,
+    default: true
+  },
+  chunk: {
+    type: Number,
+    default: 1
+  }
+});
+
+const animateElement = ref(null);
+
+// 預設的 svg 的長寬
+const defaultSize = ref(360);
+
+// svg 的長寬
+const size = computed(() => (defaultSize.value / props.chunk) | 0);
+
+const viewBox = computed(() => `0 0 ${size.value + 4} ${size.value + 4}`);
+
+// svg 圓角寬度
+const borderRadius = computed(() => {
+  const mapping = {
+    1: 8,
+    3: 6,
+    5: 4,
+    10: 2
+  };
+  return mapping[props.chunk];
+});
+
+// 矩形周長
+const shapePerimeter = computed(() => (size.value * 4) | 0);
+
+// 虛線設定：兩條短虛線（周長的一半的 1:2）
+const strokeDasharray = computed(() => {
+  const shapeHalfPerimeter = size.value * 2;
+  const mainDashLength = Math.floor(shapeHalfPerimeter / 3);
+  return `${mainDashLength} ${shapeHalfPerimeter - mainDashLength}`;
 });
 </script>
 
 <template>
-  <svg class="geometric-shape" width="100" height="100" viewBox="0 0 100 100">
+  <svg
+    class="geometric-shape"
+    :width="`${size + 4}`"
+    :height="`${size + 4}`"
+    :viewBox="viewBox"
+  >
     <rect
-      x="4"
-      y="4"
-      width="92"
-      height="92"
-      rx="2"
-      ry="2"
+      x="2"
+      y="2"
+      :width="size"
+      :height="size"
+      :rx="borderRadius"
+      :ry="borderRadius"
       stroke="#666"
       stroke-width="2"
     />
     <rect
-      x="4"
-      y="4"
-      width="92"
-      height="92"
-      rx="2"
-      ry="2"
+      x="2"
+      y="2"
+      :width="size"
+      :height="size"
+      :rx="borderRadius"
+      :ry="borderRadius"
       fill="transparent"
       stroke="white"
       stroke-width="2"
-      stroke-dasharray="46 138"
+      :stroke-dasharray="strokeDasharray"
       stroke-dashoffset="0"
     >
       <animate
+        ref="animateElement"
         attributeName="stroke-dashoffset"
         from="0"
-        to="368"
+        :to="shapePerimeter"
         dur="1.5s"
         calcMode="spline"
         repeatCount="indefinite"
