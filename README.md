@@ -12,6 +12,8 @@
 
 2. （已解決）~~切換數量後，新增出來的矩形動畫，會與原本矩形動畫不同步，原因在於原本在畫面上的矩形動畫，不會因為新增了其他的矩形動畫而重新執行動畫，而是持續進行自己的循環。~~
 
+3. `GeometricShape.vue` 使用 `props.chunk` 來控制動畫重啟，這樣忽略了「隨機 → 全部的切換」的這個變因，後續要播放的矩形動畫，會與原本正在跑的矩形動畫不同步。
+
 ## 參考資料
 
 [SVG attrs: stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray)
