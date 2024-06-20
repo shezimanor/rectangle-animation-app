@@ -60,9 +60,10 @@ const strokeDasharray = computed(() => {
 });
 
 // 監控 chunk 來控制動畫重啟：因為剛好 chunk 的變化是動畫需要重啟的主要原因
-watch(chunk, () => {
+watch(chunk, (newValue, oldValue) => {
   console.log('watch chunk', index.value);
-  if (active.value) beginAnmation();
+  // 當有新增 SVG 的時候才需要重啟畫面上的 SVG 動畫，所以需要 newValue > oldValue
+  if (newValue > oldValue && active.value) beginAnmation();
 });
 
 // 監控 active 來控制動畫的啟閉
@@ -70,7 +71,7 @@ watch(
   active,
   (newValue, oldValue) => {
     console.log('watch active', index.value);
-    // 針對初始化 active 為 true 的處理
+    // 針對本元件初始化時 active 為 true 的處理
     if (newValue && oldValue === undefined) nextTick(() => beginAnmation());
     else if (newValue) beginAnmation();
     else endAnmation();

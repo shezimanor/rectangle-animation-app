@@ -1,13 +1,26 @@
 <script setup>
+import GeometricShape from '@/components/GeometricShape.vue';
+import generateRandomBooleans from '@/utils/generateRandomBooleans';
 import { computed, ref } from 'vue';
-import GeometricShape from './components/GeometricShape.vue';
 
-const activeElement = ref('all');
+// 動畫顯示的模式：all, random
+const elementMode = ref('all');
 
+// SVG 的數量
 const elementCount = ref(1);
 
 // 每行每列數量
 const elementCountSqrt = computed(() => Math.sqrt(elementCount.value));
+
+// 隨機 active 的數量：先假設等於 elementCountSqrt
+const elementRandomCount = computed(() => elementCountSqrt.value);
+
+// 動畫狀態陣列
+const elementStateArray = computed(() => {
+  if (elementMode.value === 'random')
+    return generateRandomBooleans(elementRandomCount.value, elementCount.value);
+  else return Array(elementCount.value).fill(true);
+});
 
 // grid 排版樣式
 const elementLayoutClass = computed(
@@ -26,7 +39,7 @@ function changeElementCount(count) {
       <GeometricShape
         v-for="n in elementCount"
         :key="`shape_${n}`"
-        :active="Math.random() > 0.5"
+        :active="elementStateArray[n - 1]"
         :chunk="elementCountSqrt"
         :index="n"
       />
@@ -43,9 +56,9 @@ function changeElementCount(count) {
           <input
             type="radio"
             id="all"
-            name="activeElement"
+            name="elementMode"
             value="all"
-            v-model="activeElement"
+            v-model="elementMode"
           />
           All
         </label>
@@ -53,9 +66,9 @@ function changeElementCount(count) {
           <input
             type="radio"
             id="random"
-            name="activeItem"
+            name="elementMode"
             value="random"
-            v-model="activeElement"
+            v-model="elementMode"
           />
           Random
         </label>
