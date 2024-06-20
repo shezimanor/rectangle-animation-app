@@ -1,12 +1,20 @@
 <script setup>
 import { computed, ref } from 'vue';
 import GeometricShape from './components/GeometricShape.vue';
+
 const activeElement = ref('all');
+
 const elementCount = ref(1);
+
+// 每行每列數量
 const elementCountSqrt = computed(() => Math.sqrt(elementCount.value));
+
+// grid 排版樣式
 const elementLayoutClass = computed(
   () => `grid-${elementCountSqrt.value}x${elementCountSqrt.value}`
 );
+
+// methods
 function changeElementCount(count) {
   elementCount.value = count;
 }
@@ -18,8 +26,9 @@ function changeElementCount(count) {
       <GeometricShape
         v-for="n in elementCount"
         :key="`shape_${n}`"
-        :active="true"
+        :active="Math.random() > 0.5"
         :chunk="elementCountSqrt"
+        :index="n"
       />
     </div>
     <div class="flex-container">

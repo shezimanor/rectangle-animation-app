@@ -10,11 +10,15 @@ const props = defineProps({
   chunk: {
     type: Number,
     default: 1
+  },
+  index: {
+    type: Number,
+    default: 1
   }
 });
 
 // 解構 props：可保持一致性
-const { active, chunk } = toRefs(props);
+const { active, chunk, index } = toRefs(props);
 
 const animateElement = ref(null);
 
@@ -57,6 +61,7 @@ const strokeDasharray = computed(() => {
 
 // 監控 chunk 來控制動畫重啟：因為剛好 chunk 的變化是動畫需要重啟的主要原因
 watch(chunk, () => {
+  console.log('watch chunk', index.value);
   if (active.value) beginAnmation();
 });
 
@@ -64,6 +69,7 @@ watch(chunk, () => {
 watch(
   active,
   (newValue, oldValue) => {
+    console.log('watch active', index.value);
     // 針對初始化 active 為 true 的處理
     if (newValue && oldValue === undefined) nextTick(() => beginAnmation());
     else if (newValue) beginAnmation();
