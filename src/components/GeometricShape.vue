@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, ref, toRefs, watch } from 'vue';
 
 // props
 const props = defineProps({
@@ -14,7 +14,7 @@ const props = defineProps({
 });
 
 // 解構 props：可保持一致性
-const { chunk } = toRefs(props);
+const { active, chunk } = toRefs(props);
 
 const animateElement = ref(null);
 
@@ -38,13 +38,15 @@ const borderRadius = computed(() => {
 });
 
 // 矩形周長
-const shapePerimeter = computed(() => (size.value * 4) | 0);
+const shapePerimeter = computed(() => size.value * 4);
 
 // 虛線設定：兩條短虛線（周長的一半的 1:2）
 const strokeDasharray = computed(() => {
   const shapeHalfPerimeter = size.value * 2;
   const mainDashLength = Math.floor(shapeHalfPerimeter / 3);
-  return `${mainDashLength} ${shapeHalfPerimeter - mainDashLength}`;
+  return active.value
+    ? `${mainDashLength} ${shapeHalfPerimeter - mainDashLength}`
+    : `0 ${shapePerimeter.value}`;
 });
 
 // 監控 chunk 來控制動畫重啟：因為剛好 chunk 的變化是動畫需要重啟的主要原因
@@ -52,10 +54,30 @@ watch(chunk, () => {
   beginAnmation();
 });
 
+// 監控 chunk 來控制動畫重啟：
+watch(
+  active,
+  (newValue, oldValue) => {
+    // 針對初始化 active 為 true 的處理
+    if (newValue && oldValue === undefined) nextTick(() => beginAnmation());
+    else if (newValue) beginAnmation();
+    else endAnmation();
+  },
+  // before onMounted：且 DOM 尚未 ready
+  { immediate: true }
+);
+
 // methods
 function beginAnmation() {
+  console.log('beginAnmation');
   // beginElement 會立即重新啟動動畫
-  animateElement.value.beginElement();
+  animateElement.value?.beginElement();
+}
+
+function endAnmation() {
+  console.log('endAnmation');
+  // endElement 會立即終止動畫
+  animateElement.value?.endElement();
 }
 </script>
 
@@ -94,6 +116,7 @@ function beginAnmation() {
         attributeName="stroke-dashoffset"
         from="0"
         :to="shapePerimeter"
+        begin="indefinite"
         dur="1.5s"
         calcMode="spline"
         repeatCount="indefinite"
