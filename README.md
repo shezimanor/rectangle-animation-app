@@ -10,9 +10,20 @@
 
 1. （已解決）~~使用 svg 自動縮放，線框很明顯與範例有落差，原因在於在相同的 `viewBox` 下，`stroke-width` 也會跟著縮放，並不會像一般元素的 `border-width: 2px` 會固定在某個像素。~~
 
-2. （已解決）~~切換數量後，新增出來的矩形動畫，會與原本矩形動畫不同步，原因在於原本在畫面上的矩形動畫，不會因為新增了其他的矩形動畫而重新執行動畫，而是持續進行自己的循環。~~
+2. 畫面發生變化時（不論變因是什麼），必須要增加額外的控制讓原本在畫面上正在播放的走線動畫重啟。目前的變因有兩個：第一個是走線動畫圖形數量；第二個是全部與隨機播放的切換。
 
-3. `GeometricShape.vue` 使用 `props.chunk` 來控制動畫重啟，這樣忽略了「隨機 → 全部的切換」的這個變因，後續要播放的矩形動畫，會與原本正在跑的矩形動畫不同步。
+### 走線動畫狀態變化情境矩陣
+
+從下表得知，因為 `true`->`true` 無法被 `watch` 偵聽，所以必須另外找其他方式來處發元件動畫事件
+
+| 情境                                  |                                                   狀態變化                                                   | 元件動畫事件                                                                                  |                      觸發方式                      |
+| :------------------------------------ | :----------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------- | :------------------------------------------------: |
+| 圖形數量（少->多）<br/>模式：全部播放 |                                        `true`->`true`<br/>`x`->`true`                                        | `beginElement()`<br/>`beginElement()`                                                         |                   ?<br/>watcher                    |
+| 圖形數量（少->多）<br/>模式：隨機播放 | `true`->`true`<br/>`false`->`true`<br/>`true`->`fasle`<br/>`false`->`fasle`<br/>`x`->`true`<br/>`x`->`false` | `beginElement()`<br/>`beginElement()`<br/>`endElement()`<br/>`x`<br/>`beginElement()`<br/>`x` | ?<br/>watcher<br/>watcher<br/>x <br/>watcher<br/>x |
+| 圖形數量（多->少）<br/>模式：全部播放 |                                        `true`->`true`<br/>`true`->`x`                                        | `beginElement()`<br/>`x`                                                                      |                      ?<br/>x                       |
+| 圖形數量（多->少）<br/>模式：隨機播放 | `true`->`true`<br/>`false`->`true`<br/>`true`->`false`<br/>`false`->`false`<br/>`true`->`x`<br/>`false`->`x` | `beginElement()`<br/>`beginElement()`<br/>`endElement()`<br/>`x`<br/>`x`<br/>`x`              |    ?<br/>watcher<br/>watcher<br/>x<br/>x<br/>x     |
+| 模式（全部->隨機）<br/>數量不變       |                                      `true`->`true`<br/>`false`->`true`                                      | `beginElement()`<br/>`beginElement()`                                                         |                   ?<br/>watcher                    |
+| 模式（隨機->全部）<br/>數量不變       |                                      `true`->`true`<br/>`true`->`false`                                      | `beginElement()`<br/>`endElement()`                                                           |                   ?<br/>watcher                    |
 
 ## 參考資料
 

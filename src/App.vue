@@ -1,7 +1,7 @@
 <script setup>
 import GeometricShape from '@/components/GeometricShape.vue';
 import generateRandomBooleans from '@/utils/generateRandomBooleans';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 // 動畫顯示的模式：all, random
 const elementMode = ref('all');
@@ -26,6 +26,17 @@ const elementStateArray = computed(() => {
 const elementLayoutClass = computed(
   () => `grid-${elementCountSqrt.value}x${elementCountSqrt.value}`
 );
+
+// 監控 elementStateArray 來控制動畫重啟：變化原因有 2 種：elementCount（圖形數量）、elementMode（模式）
+watch(elementStateArray, (newValue, oldValue) => {
+  // 因為陣列是整個替換，所以 newValue !== oldValue
+  console.log('watch elementStateArray: ');
+  if (newValue.length !== oldValue.length) {
+    console.log('圖形數量改變');
+  } else {
+    console.log('模式切換');
+  }
+});
 
 // methods
 function changeElementCount(count) {
