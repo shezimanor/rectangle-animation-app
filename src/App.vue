@@ -7,6 +7,10 @@ import { computed, ref, watch } from 'vue';
 // 動畫顯示的模式：all, random
 const elementMode = ref('all');
 
+// 介面按鈕陣列
+const buttonItems = ref([1, 3, 5, 10]);
+const radioButtonItems = ref(['all', 'random']);
+
 // SVG 元件的數量
 const elementCount = ref(1);
 
@@ -63,31 +67,24 @@ function changeElementCount(count) {
     </div>
     <div class="flex-container">
       <div class="flex-item">
-        <button @click="changeElementCount(1)">1x1</button>
-        <button @click="changeElementCount(9)">3x3</button>
-        <button @click="changeElementCount(25)">5x5</button>
-        <button @click="changeElementCount(100)">10x10</button>
+        <button
+          v-for="item in buttonItems"
+          :key="`btn_${item}`"
+          @click="changeElementCount(item * item)"
+        >
+          {{ item }}x{{ item }}
+        </button>
       </div>
       <div class="flex-item">
-        <label>
+        <label v-for="item in radioButtonItems" :key="`radioBtn_${item}`">
           <input
             type="radio"
-            id="all"
+            :id="`radioBtn_${item}`"
             name="elementMode"
-            value="all"
+            :value="item"
             v-model="elementMode"
           />
-          All
-        </label>
-        <label>
-          <input
-            type="radio"
-            id="random"
-            name="elementMode"
-            value="random"
-            v-model="elementMode"
-          />
-          Random
+          {{ item }}
         </label>
       </div>
     </div>
