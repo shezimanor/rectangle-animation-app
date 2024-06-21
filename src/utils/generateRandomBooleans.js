@@ -7,7 +7,7 @@
  */
 export default function generateRandomBooleans(num, length) {
   if (num > length) {
-    throw new Error('num should be less than or equal to length');
+    throw new Error('num 必須小於等於 length');
   }
 
   // 建立一個包含 num 個 true 和 length - num 個 false 的陣列
