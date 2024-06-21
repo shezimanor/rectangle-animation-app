@@ -9,7 +9,10 @@ const props = defineProps({
   },
   chunk: {
     type: Number,
-    default: 1
+    default: 1,
+    validator(value) {
+      return [1, 3, 5, 10].includes(value);
+    }
   },
   index: {
     type: Number,
@@ -45,14 +48,14 @@ const borderRadius = computed(() => {
 
 // 矩形周長與半周長
 const shapePerimeter = computed(() => size.value * 4);
-const shapeHalfPerimeter = computed(() => size.value * 2);
+const shapeHalfPerimeter = computed(() => Math.floor(shapePerimeter.value / 2));
 
 // 主要跑動的線條長度
 const mainDashLength = computed(() =>
-  active.value ? Math.floor(shapeHalfPerimeter.value / 3) : 0
+  active.value ? Math.floor(shapeHalfPerimeter.value / 4) : 0
 );
 
-// 虛線設定：兩條短虛線（周長的一半的 1:2）
+// 虛線設定：兩條短虛線（周長的一半的 1:3）
 const strokeDasharray = computed(() => {
   return `${mainDashLength.value} ${
     shapeHalfPerimeter.value - mainDashLength.value
