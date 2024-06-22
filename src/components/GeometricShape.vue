@@ -130,6 +130,7 @@ defineExpose({
         from="0"
         :to="shapePerimeter"
         begin="indefinite"
+        end="indefinite"
         dur="1.5s"
         calcMode="spline"
         repeatCount="indefinite"

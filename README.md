@@ -12,7 +12,7 @@
 
 2. （已解決）~~畫面發生變化時（不論變因是什麼），必須要增加額外的控制讓原本在畫面上正在播放的走線動畫重啟。目前的變因有兩個：第一個是走線動畫圖形數量；第二個是全部與隨機播放的切換。~~
 
-3. 做跨瀏覽器測試時，發現在 Safari 中，`endElement()` 觸發過的動畫元件會無法透過 `beginElement()` 來重啟動畫。
+3. （已解決）~~做跨瀏覽器測試時，發現在 Safari 中，`endElement()` 觸發過的動畫元件會無法透過 `beginElement()` 來重啟動畫。~~
 
 ### 走線動畫狀態變化情境矩陣
 
@@ -33,8 +33,8 @@
 
 [SVG attrs: stroke-dashoffset](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dashoffset)
 
-[SVG Animate: begin](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/begin)
-
 [SVG SVGAnimationElement](https://developer.mozilla.org/en-US/docs/Web/API/SVGAnimationElement)
+
+[SVG animate timing attrs](https://www.w3.org/TR/SVG11/animate.html#TimingAttributes)
 
 [Vue3: Refs inside v-for​](https://vuejs.org/guide/essentials/template-refs.html#refs-inside-v-for)
