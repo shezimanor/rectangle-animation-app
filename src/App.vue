@@ -61,7 +61,6 @@ function changeElementCount(count) {
         ref="shapeRefs"
         :key="`shape_${n - 1}`"
         :active="elementStateArray[n - 1]"
-        :chunk="elementCountSqrt"
         :index="n - 1"
       />
     </div>

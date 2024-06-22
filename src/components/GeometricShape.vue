@@ -1,4 +1,5 @@
 <script setup>
+import { useElementSize } from '@vueuse/core';
 import { computed, nextTick, ref, toRefs, watch } from 'vue';
 
 // props
@@ -7,13 +8,6 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  chunk: {
-    type: Number,
-    default: 1,
-    validator(value) {
-      return [1, 3, 5, 10].includes(value);
-    }
-  },
   index: {
     type: Number,
     default: 1
@@ -21,33 +15,25 @@ const props = defineProps({
 });
 
 // 解構 props：可保持一致性
-const { active, chunk, index } = toRefs(props);
+const { active, index } = toRefs(props);
 
+const svgElement = ref(null);
 const animateElement = ref(null);
 
+const { width: svgWidth } = useElementSize(svgElement);
+
 // 預設的 svg 的長寬
-const defaultSize = ref(360);
+const size = ref(100);
 
-// 圓角對應列表：borderRadius 使用
-const borderRadiusMapping = ref({
-  1: 8,
-  3: 6,
-  5: 4,
-  10: 2
-});
+// svg 圓角寬度
+const borderRadius = ref(8);
 
-// svg 的長寬：交由 chunk 來決定
-const size = computed(() => (defaultSize.value / chunk.value) | 0);
+// 圖形周長
+const shapePerimeter = ref(0);
 
 const viewBox = computed(() => `0 0 ${size.value + 4} ${size.value + 4}`);
 
-// svg 圓角寬度
-const borderRadius = computed(() => {
-  return borderRadiusMapping.value[chunk.value];
-});
-
-// 矩形周長與半周長
-const shapePerimeter = computed(() => size.value * 4);
+// 圖形半周長
 const shapeHalfPerimeter = computed(() => Math.floor(shapePerimeter.value / 2));
 
 // 主要跑動的線條長度
@@ -75,6 +61,12 @@ watch(
   { immediate: true }
 );
 
+// 監控 svgWidth 來控制圖形虛線的呈現比例
+watch(svgWidth, (newValue) => {
+  // 圖形周長會改變主要跑動的線條長度
+  shapePerimeter.value = (newValue - 4) * 4;
+});
+
 // methods
 function beginAnimation() {
   // beginElement 會立即重新啟動動畫
@@ -96,6 +88,7 @@ defineExpose({
 
 <template>
   <svg
+    ref="svgElement"
     class="geometric-shape"
     :width="`${size + 4}`"
     :height="`${size + 4}`"
@@ -110,6 +103,7 @@ defineExpose({
       :ry="borderRadius"
       stroke="#666"
       stroke-width="2"
+      vector-effect="non-scaling-stroke"
     />
     <rect
       x="2"
@@ -123,6 +117,7 @@ defineExpose({
       stroke-width="2"
       :stroke-dasharray="strokeDasharray"
       stroke-dashoffset="0"
+      vector-effect="non-scaling-stroke"
     >
       <animate
         ref="animateElement"
