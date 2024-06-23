@@ -1,7 +1,7 @@
 import { useElementSize } from '@vueuse/core';
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 
-export const useShape = (active, svgWidthWatchCallback = () => {}) => {
+export const useShape = (active, svgWidthWatcherCallback = () => {}) => {
   const svgElement = ref(null);
   const animateElement = ref(null);
   const { width: svgWidth } = useElementSize(svgElement);
@@ -19,7 +19,7 @@ export const useShape = (active, svgWidthWatchCallback = () => {}) => {
 
   // 主要跑動的線條長度
   const mainDashLength = computed(() =>
-    active.value ? Math.floor(shapeHalfPerimeter.value / 4) : 0
+    Math.floor(shapeHalfPerimeter.value / 4)
   );
 
   // 虛線設定：兩條短虛線（周長的一半的 1:3）
@@ -48,7 +48,7 @@ export const useShape = (active, svgWidthWatchCallback = () => {}) => {
   // 監控 svgWidth 來控制圖形虛線的呈現比例
   watch(svgWidth, (newValue) => {
     // 圖形周長會改變主要跑動的線條長度（由每個元件自行定義）
-    svgWidthWatchCallback(shapePerimeter, newValue);
+    svgWidthWatcherCallback(newValue);
   });
 
   // methods
