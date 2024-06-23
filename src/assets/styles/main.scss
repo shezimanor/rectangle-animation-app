@@ -3,3 +3,56 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+body {
+  background-color: black;
+  color: #fff;
+}
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  margin: auto;
+  padding: 16px;
+  row-gap: 16px;
+}
+.grid-container {
+  display: grid;
+  width: 100%;
+  gap: 3px;
+  // 各種數量的排列樣式
+  &.grid-1x1 {
+    grid-template: repeat(1, 1fr) / repeat(1, 1fr);
+  }
+
+  &.grid-3x3 {
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  }
+
+  &.grid-5x5 {
+    grid-template: repeat(5, 1fr) / repeat(5, 1fr);
+  }
+
+  &.grid-10x10 {
+    grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+  }
+}
+.flex-container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  row-gap: 8px;
+  .flex-item {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    column-gap: 8px;
+    button {
+      padding: 4px 8px;
+    }
+    label {
+      padding-right: 8px;
+    }
+  }
+}
