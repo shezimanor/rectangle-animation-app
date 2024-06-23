@@ -1,21 +1,35 @@
 <script setup>
-import GeometricShape from '@/components/GeometricShape.vue';
+import HeartShape from '@/components/HeartShape.vue';
+import RectangleShape from '@/components/RectangleShape.vue';
 import findCommonTruePositions from '@/utils/findCommonTruePositions';
 import generateRandomBooleans from '@/utils/generateRandomBooleans';
 import { computed, ref, watch } from 'vue';
 
-// 動畫顯示的模式：all, random
-const elementMode = ref('all');
+// 動畫顯示的模式：All, Random
+const elementMode = ref('All');
+const elementShape = ref('Rectangle');
 
 // 介面按鈕陣列
-const buttonItems = ref([1, 3, 5, 10]);
-const radioButtonItems = ref(['all', 'random']);
+const buttonCountItems = ref([1, 3, 5, 10]);
+const radioButtonModeItems = ref(['All', 'Random']);
+const radioButtonShapeItems = ref(['Rectangle', 'Heart']);
 
 // SVG 元件的數量
 const elementCount = ref(1);
 
 // SVG 元件 Refs
 const shapeRefs = ref([]);
+
+// SVG 當前元件
+const currentShapeComponent = computed(() => {
+  switch (elementShape.value) {
+    case 'Heart':
+      return HeartShape;
+    case 'Rectangle':
+    default:
+      return RectangleShape;
+  }
+});
 
 // 每行每列數量
 const elementCountSqrt = computed(() => Math.sqrt(elementCount.value));
@@ -25,7 +39,7 @@ const elementRandomCount = computed(() => elementCountSqrt.value);
 
 // 動畫狀態陣列
 const elementStateArray = computed(() => {
-  if (elementMode.value === 'random')
+  if (elementMode.value === 'Random')
     return generateRandomBooleans(elementRandomCount.value, elementCount.value);
   else return Array(elementCount.value).fill(true);
 });
@@ -56,9 +70,10 @@ function changeElementCount(count) {
 <template>
   <div class="main-wrapper">
     <div :class="['grid-container', elementLayoutClass]">
-      <GeometricShape
+      <component
         v-for="n in elementCount"
         ref="shapeRefs"
+        :is="currentShapeComponent"
         :key="`shape_${n - 1}`"
         :active="elementStateArray[n - 1]"
         :index="n - 1"
@@ -67,7 +82,7 @@ function changeElementCount(count) {
     <div class="flex-container">
       <div class="flex-item">
         <button
-          v-for="item in buttonItems"
+          v-for="item in buttonCountItems"
           :key="`btn_${item}`"
           @click="changeElementCount(item * item)"
         >
@@ -75,13 +90,31 @@ function changeElementCount(count) {
         </button>
       </div>
       <div class="flex-item">
-        <label v-for="item in radioButtonItems" :key="`radioBtn_${item}`">
+        <label
+          v-for="item in radioButtonModeItems"
+          :key="`radioBtnMode_${item}`"
+        >
           <input
             type="radio"
-            :id="`radioBtn_${item}`"
+            :id="`radioBtnMode_${item}`"
             name="elementMode"
             :value="item"
             v-model="elementMode"
+          />
+          {{ item }}
+        </label>
+      </div>
+      <div class="flex-item">
+        <label
+          v-for="item in radioButtonShapeItems"
+          :key="`radioBtnShape_${item}`"
+        >
+          <input
+            type="radio"
+            :id="`radioBtnShape_${item}`"
+            name="elementShape"
+            :value="item"
+            v-model="elementShape"
           />
           {{ item }}
         </label>
