@@ -4,9 +4,32 @@
 
 ## 開發筆記
 
+### 專案主要檔案結構
+
+```
+src/
+├─ components/
+│   ├─ HeartShape.vue     - SVG 心形動畫元件
+│   └─ RectangleShape.vue - SVG 矩形動畫元件
+├─ composables/
+│   └─ useShape.js        - SVG 圖形動畫元件共用羅輯
+├─ App.vue
+└─ main.js
+```
+
 ### 主要元件
 
-走線動畫元件有兩個：`RectangleShape.vue`（圓角正方形）和 `HeartShape.vue`（心型）。
+**`RectangleShape.vue` & `HeartShape.vue`**
+
+| Props  | 型別    | 說明       |
+| :----- | :------ | :--------- |
+| active | Boolean | 動畫的狀態 |
+| index  | Number  | 元件的索引 |
+
+| Expose methods   | 說明             |
+| :--------------- | :--------------- |
+| beginAnimation() | 動畫播放（重播） |
+| endAnimation()   | 動畫中止         |
 
 呈現 `SVG` 動畫的元件，主要使用屬性 `stroke-dasharray` 和 `stroke-dashoffset` 搭配元素`<animate>`來處理走線動畫的呈現；並使用 `SVGAnimationElement.beginElement()` 和 `SVGAnimationElement.endElement()` 來控制動畫開關。
 
@@ -29,11 +52,11 @@
 
 ### 曾經遭遇的問題點
 
-1. （已解決）~~使用 svg 自動縮放，線框很明顯與範例有落差，原因在於在相同的 `viewBox` 下，`stroke-width` 也會跟著縮放，並不會像一般元素的 `border-width: 2px` 會固定在某個像素。~~
+1. （已解決）使用 svg 自動縮放，線框很明顯與範例有落差，原因在於在相同的 `viewBox` 下，`stroke-width` 也會跟著縮放，並不會像一般元素的 `border-width: 2px` 會固定在某個像素。<br />**解決辦法**：在圖形元素上添加屬性 `vector-effect="non-scaling-stroke"`。
 
-2. （已解決）~~畫面發生變化時（不論變因是什麼），必須要增加額外的控制讓原本在畫面上正在播放的走線動畫重啟。目前的變因有兩個：第一個是走線動畫圖形數量；第二個是全部與隨機播放的切換。~~
+2. （已解決）畫面發生變化時（不論變因是什麼），必須要增加額外的控制讓原本在畫面上正在播放的走線動畫重啟。目前的變因有兩個：第一個是走線動畫圖形數量；第二個是全部與隨機播放的切換。<br />**解決辦法**：圖形元件使用 `defineExpose()` 來暴露元件方法 `beginAnimation()` 和 `endAnimation` 讓父層也能控制動畫。
 
-3. （已解決）~~做跨瀏覽器測試時，發現在 Safari 中，`endElement()` 觸發過的動畫元件會無法透過 `beginElement()` 來重啟動畫。~~
+3. （已解決）做跨瀏覽器測試時，發現在 Safari 中，`endElement()` 觸發過的動畫元件會無法透過 `beginElement()` 來重啟動畫。<br />**解決辦法**：`<animate>` 需要增加屬性 `end="indefinite"` 來確保 `endElement()` 能夠控制動畫。
 
 ## 參考資料
 
