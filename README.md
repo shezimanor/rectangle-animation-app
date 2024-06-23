@@ -2,17 +2,11 @@
 
 ## 開發筆記
 
-### 主要元件：`GeometricShape.vue`
+### 主要元件
 
-呈現 `SVG` 動畫的元件，主要使用屬性 `stroke-dasharray` 和 `stroke-dashoffset` 搭配元素`<animate>`來處理走線動畫的呈現。
+走線動畫元件有兩個：`RectangleShape.vue`（圓角正方形）和 `HeartShape.vue`（心型）。
 
-### 目前的問題點
-
-1. （已解決）~~使用 svg 自動縮放，線框很明顯與範例有落差，原因在於在相同的 `viewBox` 下，`stroke-width` 也會跟著縮放，並不會像一般元素的 `border-width: 2px` 會固定在某個像素。~~
-
-2. （已解決）~~畫面發生變化時（不論變因是什麼），必須要增加額外的控制讓原本在畫面上正在播放的走線動畫重啟。目前的變因有兩個：第一個是走線動畫圖形數量；第二個是全部與隨機播放的切換。~~
-
-3. （已解決）~~做跨瀏覽器測試時，發現在 Safari 中，`endElement()` 觸發過的動畫元件會無法透過 `beginElement()` 來重啟動畫。~~
+呈現 `SVG` 動畫的元件，主要使用屬性 `stroke-dasharray` 和 `stroke-dashoffset` 搭配元素`<animate>`來處理走線動畫的呈現；並使用 `SVGAnimationElement.beginElement()` 和 `SVGAnimationElement.endElement()` 來控制動畫開關。
 
 ### 走線動畫圖形的狀態變化情境矩陣
 
@@ -30,6 +24,14 @@
 ### 走線動畫圖形的的尺寸縮放說明
 
 屬性 `vector-effect: non-scaling-stroke` 可以讓線條在 SVG 縮放時維持固定的寬度，如此一來就不需要依賴修改 `viewBox` 來維持視覺上的一致性。但是這個屬性會讓 `stroke-dasharray` 的值不會根據 SVG 的縮放進行調整，所以必須偵聽 SVG 的寬度變化來及時調整 `stroke-dasharray` 的值，使得任何尺寸下的走線動畫都能維持一樣的比例。
+
+### 曾經遭遇的問題點
+
+1. （已解決）~~使用 svg 自動縮放，線框很明顯與範例有落差，原因在於在相同的 `viewBox` 下，`stroke-width` 也會跟著縮放，並不會像一般元素的 `border-width: 2px` 會固定在某個像素。~~
+
+2. （已解決）~~畫面發生變化時（不論變因是什麼），必須要增加額外的控制讓原本在畫面上正在播放的走線動畫重啟。目前的變因有兩個：第一個是走線動畫圖形數量；第二個是全部與隨機播放的切換。~~
+
+3. （已解決）~~做跨瀏覽器測試時，發現在 Safari 中，`endElement()` 觸發過的動畫元件會無法透過 `beginElement()` 來重啟動畫。~~
 
 ## 參考資料
 
