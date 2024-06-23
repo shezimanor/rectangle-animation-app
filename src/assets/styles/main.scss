@@ -54,5 +54,11 @@ body {
     label {
       padding-right: 8px;
     }
+    a {
+      color: #74b9ff;
+    }
+    &:last-of-type {
+      padding-top: 24px;
+    }
   }
 }

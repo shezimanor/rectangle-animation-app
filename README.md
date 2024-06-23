@@ -1,5 +1,7 @@
 # Rectangle Animation App
 
+<a href="https://shezimanor.github.io/rectangle-animation-app/" target="_blank">Live Demo</a>
+
 ## 開發筆記
 
 ### 主要元件

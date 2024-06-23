@@ -119,6 +119,13 @@ function changeElementCount(count) {
           {{ item }}
         </label>
       </div>
+      <div class="flex-item">
+        <a
+          href="https://github.com/shezimanor/rectangle-animation-app"
+          target="_blank"
+          >Github Repo</a
+        >
+      </div>
     </div>
   </div>
 </template>
