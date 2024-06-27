@@ -12,6 +12,12 @@ export const useShape = (active, svgWidthWatcherCallback = () => {}) => {
   // 圖形周長
   const shapePerimeter = ref(0);
 
+  // 動畫設定
+  const animateConfig = ref({
+    dur: '1.5s',
+    keySplines: '.42 .0 .1 .1'
+  });
+
   // 圖形半周長
   const shapeHalfPerimeter = computed(() =>
     Math.floor(shapePerimeter.value / 2)
@@ -66,6 +72,7 @@ export const useShape = (active, svgWidthWatcherCallback = () => {}) => {
     animateElement,
     size,
     shapePerimeter,
+    animateConfig,
     strokeDasharray,
     viewBox,
     beginAnimation,
