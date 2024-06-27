@@ -22,20 +22,11 @@ body {
   width: 100%;
   gap: 3px;
   // 各種數量的排列樣式
-  &.grid-1x1 {
-    grid-template: repeat(1, 1fr) / repeat(1, 1fr);
-  }
-
-  &.grid-3x3 {
-    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-  }
-
-  &.grid-5x5 {
-    grid-template: repeat(5, 1fr) / repeat(5, 1fr);
-  }
-
-  &.grid-10x10 {
-    grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+  // @for $i from 1 through 10
+  @each $i in $grid-layouts {
+    &.grid-#{$i}x#{$i} {
+      grid-template: repeat(#{$i}, 1fr) / repeat(#{$i}, 1fr);
+    }
   }
 }
 .flex-container {

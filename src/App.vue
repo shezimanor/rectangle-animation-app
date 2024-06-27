@@ -10,6 +10,7 @@ const elementMode = ref('All');
 const elementShape = ref('Rectangle');
 
 // 介面按鈕陣列
+// buttonCountItems 如果要更新請記得同步修改 variables.scss 的 `$grid-layouts`
 const buttonCountItems = ref([1, 3, 5, 10]);
 const radioButtonModeItems = ref(['All', 'Random']);
 const radioButtonShapeItems = ref(['Rectangle', 'Heart']);
