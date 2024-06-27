@@ -33,7 +33,7 @@ const borderRadius = ref(8);
 
 function svgWidthWatcherCallback(newValue) {
   // 圖形周長會改變主要跑動的線條長度
-  shapePerimeter.value = (newValue - 4) * 4;
+  shapePerimeter.value = newValue * (size.value / (size.value + 4)) * 4;
 }
 
 // 使用 <script setup> 的元件，必須用 defineExpose 才能將屬性和方法暴露出去
