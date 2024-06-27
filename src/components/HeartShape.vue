@@ -22,6 +22,7 @@ const {
   animateElement,
   size,
   shapePerimeter,
+  animateConfig,
   strokeDasharray,
   viewBox,
   beginAnimation,
@@ -75,15 +76,15 @@ defineExpose({
       <animate
         ref="animateElement"
         attributeName="stroke-dashoffset"
-        from="0"
-        :to="shapePerimeter"
+        :from="shapePerimeter"
+        to="0"
         begin="indefinite"
         end="indefinite"
-        dur="1.5s"
+        :dur="animateConfig.dur"
         calcMode="spline"
         repeatCount="indefinite"
         keyTimes="0;1"
-        keySplines=".25 .1 .45 .9"
+        :keySplines="animateConfig.keySplines"
       />
     </path>
   </svg>

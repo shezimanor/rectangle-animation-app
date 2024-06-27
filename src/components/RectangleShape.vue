@@ -22,6 +22,7 @@ const {
   animateElement,
   size,
   shapePerimeter,
+  animateConfig,
   strokeDasharray,
   viewBox,
   beginAnimation,
@@ -84,11 +85,11 @@ defineExpose({
         :to="shapePerimeter"
         begin="indefinite"
         end="indefinite"
-        dur="1.5s"
+        :dur="animateConfig.dur"
         calcMode="spline"
         repeatCount="indefinite"
         keyTimes="0;1"
-        keySplines=".25 .1 .45 .9"
+        :keySplines="animateConfig.keySplines"
       />
     </rect>
   </svg>
