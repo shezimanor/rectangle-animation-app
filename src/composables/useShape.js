@@ -15,7 +15,7 @@ export const useShape = (active, svgWidthWatcherCallback = () => {}) => {
   // 動畫設定
   const animateConfig = ref({
     dur: '1.5s',
-    keySplines: '.42 .0 .1 .1'
+    keySplines: '.65 .29 .35 .75'
   });
 
   // 圖形半周長
